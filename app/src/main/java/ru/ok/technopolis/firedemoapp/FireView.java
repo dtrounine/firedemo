@@ -56,6 +56,7 @@ public class FireView extends View {
     private int[][] firePixels;
     private int fireWidth;
     private int fireHeight;
+    private int[] bitmapPixels;
 
     private final Paint paint = new Paint();
     private final Random random = new Random();
@@ -86,6 +87,12 @@ public class FireView extends View {
     }
 
     private void drawFire(Canvas canvas) {
+        final int pixelCount = fireWidth * fireHeight;
+        if (bitmapPixels == null || bitmapPixels.length < pixelCount ) {
+            bitmapPixels = new int[pixelCount];
+        }
+
+
         for (int x = 0; x < fireWidth; x++) {
             for (int y = 0; y < fireHeight; y++) {
                 int temperature = firePixels[x][y];
@@ -96,9 +103,10 @@ public class FireView extends View {
                     temperature = firePalette.length - 1;
                 }
                 @ColorInt int color = firePalette[temperature];
-                bitmap.setPixel(x, y, color);
+                bitmapPixels[fireWidth * y + x] = color;
             }
         }
+        bitmap.setPixels(bitmapPixels, 0, fireWidth, 0, 0, fireWidth, fireHeight);
         canvas.drawBitmap(bitmap, 0, 0, paint);
     }
 
