@@ -57,6 +57,7 @@ public class FireView extends View {
     private int fireWidth;
     private int fireHeight;
     private int[] bitmapPixels;
+    private int minHotY = -1;
 
     private final Paint paint = new Paint();
     private final Random random = new Random();
@@ -92,7 +93,9 @@ public class FireView extends View {
             bitmapPixels = new int[pixelCount];
         }
 
-        for (int y = 0; y < fireHeight; y++) {
+        final int startY = this.minHotY < 0 ? 0 : minHotY;
+
+        for (int y = startY; y < fireHeight; y++) {
             for (int x = 0; x < fireWidth; x++) {
                 int temperature = firePixels[x + y * fireWidth];
                 if (temperature < 0) {
@@ -110,15 +113,23 @@ public class FireView extends View {
     }
 
     private void spreadFire() {
-        for (int y = 0; y < fireHeight - 1; y++) {
+        final int startY = this.minHotY < 0 ? 0 : Math.max(0, minHotY - 5);
+        int minHotY = -1;
+        for (int y = startY; y < fireHeight - 1; y++) {
             for (int x = 0; x < fireWidth; x++) {
                 int rand_x = random.nextInt(3);
                 int rand_y = random.nextInt(6);
                 int dst_x = Math.min(fireWidth - 1, Math.max(0, x + rand_x - 1));
                 int dst_y = Math.min(fireHeight - 1, y + rand_y);
                 int deltaFire = -(rand_x & 1);
-                firePixels[x + y * fireWidth] = Math.max(0, firePixels[dst_x + dst_y * fireWidth] + deltaFire);
+                int temp = Math.max(0, firePixels[dst_x + dst_y * fireWidth] + deltaFire);
+                firePixels[x + y * fireWidth] = temp;
+
+                if (minHotY == -1 && temp > 0) {
+                    minHotY = y;
+                }
             }
         }
+        this.minHotY = minHotY;
     }
 }
