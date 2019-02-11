@@ -70,8 +70,10 @@ public class FireView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        fireWidth = w;
-        fireHeight = h;
+        float aspectRatio = (float) w / h;
+        fireWidth = 150;
+        fireHeight = (int) (fireWidth / aspectRatio);
+
         firePixels = new int[fireWidth * fireHeight];
 
         for (int x = 0; x < fireWidth; x ++) {
@@ -109,6 +111,9 @@ public class FireView extends View {
             }
         }
         bitmap.setPixels(bitmapPixels, 0, fireWidth, 0, 0, fireWidth, fireHeight);
+
+        float scale = (float) getWidth() / fireWidth;
+        canvas.scale(scale, scale);
         canvas.drawBitmap(bitmap, 0, 0, paint);
     }
 
