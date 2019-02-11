@@ -7,4 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <ru.ok.technopolis.firedemoapp.FpsIndicatorView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="top|right"/>
+
 </FrameLayout>
