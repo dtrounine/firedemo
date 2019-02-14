@@ -57,12 +57,13 @@ public class FpsIndicatorView extends View implements Handler.Callback {
         if (fpsText != null) {
             canvas.drawText(fpsText, textLeft, height, textPaint);
         }
+        frameCount++;
+        invalidate();
     }
 
     @Override
     public boolean handleMessage(Message msg) {
         if (msg.what == MSG_NEXT_FRAME) {
-            frameCount++;
             final long ts = SystemClock.uptimeMillis();
             if (ts - startTs > 1000) {
                 if (frameCount > 10) {
@@ -76,7 +77,7 @@ public class FpsIndicatorView extends View implements Handler.Callback {
                 frameCount = 0;
                 invalidate();
             }
-            handler.sendMessage(Message.obtain(handler, MSG_NEXT_FRAME));
+            handler.sendMessageDelayed(Message.obtain(handler, MSG_NEXT_FRAME), 100);
         }
         return true;
     }
